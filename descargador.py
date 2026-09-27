@@ -89,9 +89,14 @@ def construir_opciones(carpeta, solo_audio, calidad, formato, playlist,
         filtro = "" if calidad in ("Mejor", None) else f"[height<={calidad}]"
         if hay_ffmpeg():
             if formato == "mp4":
-                # Preferir códecs compatibles con MP4 (h264/aac) y si no, lo mejor disponible.
+                # Forzar video H.264 (avc1) y audio AAC: es lo único que se ve en
+                # cualquier reproductor. YouTube suele ofrecer AV1/VP9 dentro de MP4,
+                # y el Reproductor de Windows no los muestra (solo se escucha el audio).
+                # YouTube ofrece H.264 hasta 1080p; para más resolución usar MKV/WEBM.
                 opciones["format"] = (
-                    f"bestvideo{filtro}[ext=mp4]+bestaudio[ext=m4a]/"
+                    f"bestvideo{filtro}[vcodec^=avc1]+bestaudio[ext=m4a]/"
+                    f"bestvideo{filtro}[vcodec^=avc1]+bestaudio/"
+                    f"best{filtro}[vcodec^=avc1][acodec!=none]/"
                     f"bestvideo{filtro}+bestaudio/best{filtro}/best"
                 )
             else:

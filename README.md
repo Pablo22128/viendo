@@ -54,6 +54,10 @@ python descargador.py "URL" --audio --calidad 320
 python descargador.py "URL_DE_LA_LISTA" --audio --playlist --carpeta ./musica
 ```
 
+**Sobre la calidad del video:** en MP4 el programa baja siempre video H.264, que se ve en cualquier
+reproductor (incluido el de Windows). YouTube solo ofrece H.264 hasta 1080p. Para 1440p o 4K elegí
+MKV o WEBM, pero esos usan VP9/AV1 y pueden necesitar un reproductor como VLC.
+
 Por defecto los archivos se guardan en la carpeta Descargas, dentro de `YouTube`.
 
 Si YouTube cambia algo y deja de funcionar, actualizá yt-dlp: `pip install -U yt-dlp`.
