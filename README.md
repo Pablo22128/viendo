@@ -3,7 +3,21 @@
 Programa en Python para descargar **video** (MP4/MKV/WEBM) o **solo audio** (MP3/M4A/OPUS/WAV/FLAC) de YouTube.
 Tiene ventana gráfica y también se puede usar desde la consola. Usa [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 
-## Instalación
+## Windows sin instalar nada
+
+Usá `DescargadorYouTube.exe`: es un solo archivo que ya trae Python, yt-dlp, ffmpeg y deno.
+Doble clic y listo. Si Windows muestra "Windows protegió su PC", tocá *Más información* →
+*Ejecutar de todas formas* (pasa con cualquier programa sin firma digital).
+
+Para generar el .exe en Windows con Python instalado:
+```
+pip install pyinstaller "yt-dlp[default]"
+pyinstaller --onefile --windowed --name DescargadorYouTube --collect-all yt_dlp_ejs ^
+  --add-binary "ffmpeg.exe;bin" --add-binary "deno.exe;bin" descargador.py
+```
+(con `ffmpeg.exe` y `deno.exe` en la misma carpeta que `descargador.py`).
+
+## Instalación (para usar con Python)
 
 1. Python 3.8 o superior (en Linux puede hacer falta `sudo apt install python3-tk` para la ventana).
 2. Instalar yt-dlp:
@@ -40,7 +54,7 @@ python descargador.py "URL" --audio --calidad 320
 python descargador.py "URL_DE_LA_LISTA" --audio --playlist --carpeta ./musica
 ```
 
-Por defecto los archivos se guardan en `~/Descargas/YouTube`.
+Por defecto los archivos se guardan en la carpeta Descargas, dentro de `YouTube`.
 
 Si YouTube cambia algo y deja de funcionar, actualizá yt-dlp: `pip install -U yt-dlp`.
 

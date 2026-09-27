@@ -25,7 +25,22 @@ except ImportError:
     sys.exit(1)
 
 
-CARPETA_POR_DEFECTO = os.path.join(os.path.expanduser("~"), "Descargas", "YouTube")
+# En el .exe de Windows, ffmpeg.exe y deno.exe vienen incluidos junto al programa.
+if getattr(sys, "frozen", False):
+    _carpeta_bin = os.path.join(getattr(sys, "_MEIPASS", os.path.dirname(sys.executable)), "bin")
+    os.environ["PATH"] = _carpeta_bin + os.pathsep + os.environ.get("PATH", "")
+
+
+def _carpeta_descargas():
+    inicio = os.path.expanduser("~")
+    # En Windows la carpeta "Descargas" se llama "Downloads" en el disco.
+    for nombre in ("Downloads", "Descargas"):
+        if os.path.isdir(os.path.join(inicio, nombre)):
+            return os.path.join(inicio, nombre, "YouTube")
+    return os.path.join(inicio, "Descargas", "YouTube")
+
+
+CARPETA_POR_DEFECTO = _carpeta_descargas()
 
 CALIDADES_VIDEO = ["Mejor", "2160", "1440", "1080", "720", "480", "360", "240"]
 FORMATOS_VIDEO = ["mp4", "mkv", "webm"]
@@ -47,6 +62,7 @@ def construir_opciones(carpeta, solo_audio, calidad, formato, playlist,
         "restrictfilenames": False,
         "windowsfilenames": True,
         "quiet": True,
+        "noprogress": True,
         "no_warnings": True,
     }
     if playlist:
@@ -345,6 +361,7 @@ def main_gui():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
+    # El .exe no tiene consola (sys.stdout es None): siempre abre la ventana.
+    if len(sys.argv) > 1 and sys.stdout is not None:
         sys.exit(main_consola(sys.argv[1:]))
     main_gui()
